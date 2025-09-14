@@ -14,8 +14,14 @@ RUN mkdir -p /scripts /backups/postgres
 COPY backup.sh /scripts/
 RUN chmod +x /scripts/backup.sh
 
-# Set up cron job (runs daily at 2 AM)
-RUN echo "0 2 * * * /scripts/backup.sh >> /var/log/backup.log 2>&1" | crontab -
+# Create cron job file
+RUN echo "0 2 * * * /scripts/backup.sh >> /var/log/backup.log 2>&1" > /etc/crontabs/root
 
-# Start cron daemon
-CMD ["crond", "-f", "-d", "8"]
+# Create startup script to handle cron properly
+RUN echo '#!/bin/bash' > /start.sh && \
+    echo 'echo "Starting backup service..."' >> /start.sh && \
+    echo 'crond -f -d 8' >> /start.sh && \
+    chmod +x /start.sh
+
+# Start cron daemon with proper flags
+CMD ["/start.sh"]

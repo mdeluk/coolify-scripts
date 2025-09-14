@@ -5,17 +5,13 @@ services:
     build: .
     container_name: coolify-backups
     environment:
-      # Container names - update these with your actual container names
-      - DOCUSEAL_CONTAINER=your-docuseal-postgres-container
-      - N8N_CONTAINER=your-n8n-postgres-container
-      
-      # Database users - update these with your actual database users
-      - DOCUSEAL_USER=your_docuseal_user
-      - N8N_USER=your_n8n_user
-      
-      # Database names - update these with your actual database names
-      - DOCUSEAL_DB=your_docuseal_database
-      - N8N_DB=your_n8n_database
+      # These will pull from Coolify's environment variables
+      - DOCUSEAL_CONTAINER=${DOCUSEAL_CONTAINER}
+      - DOCUSEAL_USER=${DOCUSEAL_USER}
+      - DOCUSEAL_DB=${DOCUSEAL_DB}
+      - N8N_CONTAINER=${N8N_CONTAINER}
+      - N8N_USER=${N8N_USER}
+      - N8N_DB=${N8N_DB}
     volumes:
       # Docker socket access for executing commands in other containers
       - /var/run/docker.sock:/var/run/docker.sock:ro
